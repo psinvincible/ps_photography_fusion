@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@keyframes glow {
+  0% { box-shadow: 0 0 5px rgba(255,255,255,0.2); }
+  50% { box-shadow: 0 0 20px rgba(255,255,255,0.6); }
+  100% { box-shadow: 0 0 5px rgba(255,255,255,0.2); }
+}
+
+.animate-glow {
+  animation: glow 2s infinite ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+
+.my-masonry-grid {
+  display: flex;
+  margin-left: -16px;
+  width: auto;
+}
+
+.my-masonry-grid_column {
+  padding-left: 16px;
+  background-clip: padding-box;
+}
+
+
+@keyframes floatLeaf {
+  0% { transform: translateY(100vh) rotate(0deg); opacity:0 }
+  50% { opacity:1 }
+  100% { transform: translateY(-10vh) rotate(360deg); opacity:0 }
+}
+
+.leaf {
+  position:absolute;
+  font-size:24px;
+  animation: floatLeaf linear infinite;
+}
+
+.leaf1 { left:10%; animation-duration:8s; }
+.leaf2 { left:30%; animation-duration:10s; }
+.leaf3 { left:60%; animation-duration:9s; }
+.leaf4 { left:80%; animation-duration:11s; }
+
+@keyframes fadeIn {
+  from { opacity:0; transform:scale(0.9); }
+  to { opacity:1; transform:scale(1); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease;
+}
