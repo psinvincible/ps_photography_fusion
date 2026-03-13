@@ -15,16 +15,22 @@ export async function POST(req){
             await stats.save();
         }
 
-        return Response.json({visitors: stats.visitors})
+        const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || "Unknown";
+        console.log("Visitor IP:", ip);
+
+        return Response.json({visitors: stats.visitors, ip})
     } catch (error) {
         
     }
 }
 
-export async function GET(){
+export async function GET(req){
     await connectDB();
+
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || "Unknown";
+        console.log("Visitor IP:", ip);
 
     const stats = await Stat.findOne();
     const visitors = stats ? stats.visitors : 0;
-    return Response.json({visitors}, {status: 200});
+    return Response.json({visitors, ip}, {status: 200});
 }

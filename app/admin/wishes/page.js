@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function AdminWishesManagement() {
   const [wishes, setWishes] = useState([]);
@@ -26,13 +27,15 @@ export default function AdminWishesManagement() {
       body: JSON.stringify(id),
     });
 
+    setWishes(prev => prev.filter(wish => wish._id !== id));
     if (res.ok) {
-      alert("Wish Deleted!");
+      toast.success("Wish deleted successfully");
       return;
     } else {
-      alert("Something went wrong");
+      toast.error("Something went wrong");
     }
   };
+
   useEffect(() => {
     const fetchWishes = async () => {
       const res = await fetch("/api/admin/wish");
@@ -55,6 +58,7 @@ export default function AdminWishesManagement() {
           <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             <div className="space-y-1">
               <h2 className="font-semibold text-lg">{wish.name}</h2>
+              <p className="text-gray-400 text-sm">Request On: {new Date(wish.createdAt).toLocaleString()}</p>
               <p className="text-gray-400 text-sm md:text-base">
                 {wish.message}
               </p>
@@ -76,7 +80,8 @@ export default function AdminWishesManagement() {
 
               <button
                 onClick={() => deleteWish(wish._id)}
-                className={`px-3 py-1 rounded text-sm transition ${wish.approved ? "disabled opacity-30 cursor-not-allowed" : "bg-red-500 hover:bg-red-600 text-white"} `}
+                disabled={wish.approved}
+                className={`px-3 py-1 rounded text-sm transition ${wish.approved ? "opacity-30 cursor-not-allowed" : "bg-red-500 hover:bg-red-600 text-white"} `}
               >
                 Delete
               </button>

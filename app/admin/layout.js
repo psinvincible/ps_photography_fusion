@@ -26,7 +26,7 @@ export default function AdminLayout({ children }) {
     { href: "/admin/featured", label: "Featured", Icon: MdStar },
     { href: "/admin/wishes", label: "Public Wishes", Icon: MdMail },
     { href: "/admin/messages", label: "Messages", Icon: MdMessage },
-    { href: "/admin/profile", label: "Profile", Icon: MdPerson },
+    // { href: "/admin/profile", label: "Profile", Icon: MdPerson },
   ];
 
   const handleLogout = () => {
