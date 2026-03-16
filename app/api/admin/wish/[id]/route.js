@@ -29,7 +29,6 @@ export async function PATCH(req, {params}){
         if(!user && user.role !== "admin")return Response.json({message: "Unauthorized"},{status: 401});
 
         const {id} = await params;
-        console.log(id);
     
         const wish = await Wish.findById(id);
         if(!wish) return Response.json({error: "No Wish found"}, {status: 404});

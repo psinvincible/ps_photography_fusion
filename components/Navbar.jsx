@@ -2,7 +2,7 @@
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdAccountCircle } from "react-icons/md";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 
@@ -11,6 +11,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [hasNew, setHasNew] = useState(false);
 
   const navLink = (href, label) => (
     <Link
@@ -21,6 +22,20 @@ export default function Navbar() {
       {label}
     </Link>
   );
+
+  useEffect(() => {
+    const fetchHasNew = async() => {
+      const res = await fetch("/api/featured/new");
+      const data = await res.json();
+      if(data.hasNew === false){
+        setHasNew(false);
+        return;
+      }
+      setHasNew(true);
+    }
+    fetchHasNew();
+
+  }, []);
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50 bg-black/60 backdrop-blur border-b border-white/10">
@@ -33,7 +48,14 @@ export default function Navbar() {
         <div className="hidden md:flex gap-6 text-sm items-center">
           {navLink("/", "Home")}
           {navLink("/explore", "Explore")}
-          {navLink("/featured", "Featured Section")}
+          <Link
+            href="/featured"
+            onClick={() => setMenuOpen(false)}
+            className={`transition ${pathname === "/featured" ? "text-white" : "text-gray-400"} hover:text-white`}
+          >
+            Featured Section
+            {hasNew === true ? <span className="inline-block text-xs bg-gray-400  text-white font-medium rounded-xl px-1 border border-green-500">new</span> : ""}
+          </Link>
           {navLink("/about", "About")}
           {navLink("/contact", "Contact")}
 

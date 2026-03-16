@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function ContactPage(){
     const [form, setForm] = useState({
@@ -32,11 +33,14 @@ export default function ContactPage(){
         const data = await res.json();
 
         if(data.success){
-            alert("Message sent successfully.");
+            toast.success("Message sent successfully.");
             setForm({name: "", email: "", message: ""});
+            setLoading(false);
+        }else {
+            toast.error("Error occured.");
         }
 
-        setLoading(false);
+        
     }
 
     return (
@@ -74,6 +78,7 @@ export default function ContactPage(){
                     <input
                      name="name"
                      type="text"
+                     value={form.name}
                      placeholder="Your Name"
                      onChange={handleChange}
                      className="w-full p-3 m-2 bg-black border border-white/20 rounded-lg"
@@ -82,6 +87,7 @@ export default function ContactPage(){
                     <input 
                     name="email"
                     type="email"
+                    value={form.email}
                     onChange={handleChange}
                     placeholder="Your Email"
                     className="w-full p-3 m-2 bg-black border border-white/20 rounded-lg"
@@ -90,6 +96,7 @@ export default function ContactPage(){
                     <textarea 
                     name="message"
                     placeholder="Your message"
+                    value={form.message}
                     rows={6}
                     onChange={handleChange}
                     className="w-full p-3 m-2 bg-black border border-white/20 rounded-lg"

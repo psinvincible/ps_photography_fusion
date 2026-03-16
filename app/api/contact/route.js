@@ -11,7 +11,6 @@ export async function POST(req){
         if(!name || !email || !message)return Response.json({message: "All fields are required!"},{status: 400});
 
         const contact = await Contact.create({name, email, message});
-        console.log(contact);
 
         return Response.json({success: true, contact});
     } catch (error) {

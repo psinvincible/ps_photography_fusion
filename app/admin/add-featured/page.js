@@ -20,8 +20,6 @@ export default function AddFeatured() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(form);
-
     const res = await fetch(`/api/featured`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

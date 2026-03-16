@@ -22,8 +22,6 @@ const page = () => {
   const handleUpdate = async(e) => {
     e.preventDefault();
 
-    console.log(form);
-
     const res = await fetch(`/api/photos/${id}`, {
       method: "PUT",
       headers: {"Content-Type": "application/json"},

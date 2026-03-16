@@ -10,7 +10,6 @@ export default function AdminPhoto() {
   const fetchPhotos = async () => {
     const res = await fetch("/api/admin/photos");
     const data = await res.json();
-    console.log(data);
     setPhotos(data);
   };
 

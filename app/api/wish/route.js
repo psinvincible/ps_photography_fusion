@@ -7,7 +7,6 @@ export async function POST(req){
         await connectDB();
 
         const body = await req.json();
-        console.log(body);
 
         const wish = await Wish.create({
             name: body.name,
@@ -17,7 +16,6 @@ export async function POST(req){
             imageUrl: body.imageUrl,
             link: body.link,
         })
-        console.log(wish);
 
         return Response.json({wish}, {success: true});
     } catch (error) {

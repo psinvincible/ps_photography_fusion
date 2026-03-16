@@ -1,7 +1,11 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function AdminFeatured() {
+
+  const router = useRouter();
+  
   const [active, setActive] = useState([]);
   const [expired, setExpired] = useState([]);
 
@@ -32,7 +36,7 @@ export default function AdminFeatured() {
 
         <div>
         <button
-          onClick={() => router.push("/admin/add-photo")}
+          onClick={() => router.push("/admin/add-featured")}
           className="bg-purple-400 text-black px-4 py-2 mx-1 rounded-lg "
         >
           + Add Featured

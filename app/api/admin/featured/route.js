@@ -31,8 +31,6 @@ export async function DELETE(req){
 
         const {id} = await req.json();
 
-        console.log(id);
-
         const deleted = await Featured.findByIdAndDelete(id);
 
         return Response.json({success: true});

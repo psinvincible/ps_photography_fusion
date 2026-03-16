@@ -8,8 +8,6 @@ export async function GET(){
         await connectDB();
         const featured  = await Featured.find({ expiresAt: {$gt: new Date()}, isActive: true}).sort({ createdAt: -1});
 
-        // console.log(featured);
-
         return Response.json({featured}, {status: 201});
     } catch (error) {
         return Response.json({message: error}, {status: 500});
@@ -31,8 +29,6 @@ export async function POST(req){
         const newFeatured = await Featured.create({
             title, message, imageUrl, link, animation, expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
         });
-
-        console.log(newFeatured);
 
         return Response.json(newFeatured, {status: 201});
 

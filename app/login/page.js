@@ -45,6 +45,7 @@ const AdminLoginPage = () => {
         <form onSubmit={handleLogin} className="space-y-4">
           <input
             type="email"
+            disabled={loading}
             placeholder="Email"
             className="w-full p-3 mb-4 bg-black/50 border border-white/20 rounded focus:outline-none"
             onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -53,6 +54,7 @@ const AdminLoginPage = () => {
           <div className="relative w-full mb-4">
             <input
               placeholder="Password"
+              disabled={loading}
               type={showPassword ? "text" : "password"}
               className="w-full p-3 pr-10 bg-black/50 border border-white/20 rounded focus:outline-none"
               onChange={(e) => setForm({ ...form, password: e.target.value })}

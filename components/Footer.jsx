@@ -19,7 +19,7 @@ export default function Footer(){
 
         const interval = setInterval(() => {
             fetchVisitors();
-        }, 5000);
+        }, 10000);
 
         return () => clearInterval(interval);
     }, [])

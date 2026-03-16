@@ -11,7 +11,6 @@ export default function FeaturedSection() {
     const fetchFeatured = async () => {
       const res = await fetch("/api/featured");
       const data = await res.json();
-      console.log(data);
       setActive(data.featured);
     };
 
