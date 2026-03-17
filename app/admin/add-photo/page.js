@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
+import toast from 'react-hot-toast';
 
 const page = () => {
   const router = useRouter();
@@ -12,7 +13,39 @@ const page = () => {
     category: "",
     description: "",
   });
-
+  const [image, setImage] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  
+  const handleImageUpload = async (e) => {
+    e.preventDefault();
+    if (!image) {
+      toast.error("image not found!");
+      return;
+    }
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("file", image);
+    try {
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      console.log("ImageUrl:", data.url);
+      if (res.ok && data.url) {
+        toast.success("image Upload success");
+        setForm((prev) => ({
+          ...prev,
+          imageUrl: data.url,
+        }));
+      } else {
+        toast.error("Upload failed!");
+      }
+    } catch (err) {
+      toast.error("Upload error!");
+    }
+    setUploading(false);
+  };
 
   const handleChange = (e) => {
     setForm({...form, [e.target.name] : e.target.value})
@@ -58,14 +91,41 @@ const page = () => {
         </div>
 
         <div>
-          <label className='block test-sm font-medium mb-1'>Image URL</label>
-        <input  
-        name='imageUrl'
-        placeholder='Image URL'
-        type='text'
-        className='w-full border rounded-lg px-3 py-2'
-        onChange={handleChange}
-        />
+          <label className='block text-sm font-medium mb-1'>Image URL</label>
+          <input
+            name='imageUrl'
+            placeholder='Image URL'
+            type='text'
+            className='w-full border rounded-lg px-3 py-2 bg-black cursor-not-allowed'
+            value={form.imageUrl}
+            disabled
+          />
+        </div>
+
+        <div>
+          <input 
+          type="file"
+          accept='image/*'
+          onChange={(e) => setImage(e.target.files[0])}
+          className='w-full border rounded-lg px-3 py-2'
+          />
+
+          <button
+            onClick={handleImageUpload}
+            type="button"
+            className='px-4 py-2 bg-white text-black rounded'
+            disabled={uploading}
+          >{uploading ? "Uploading..." : "Upload Photo"}</button>
+
+          {form.imageUrl && (
+            <div>
+              <img 
+              src={form.imageUrl}
+              alt="preview"
+              className='w-40 h-40 object-cover rounded-lg border'
+              />
+            </div>
+          )}
         </div>
 
         <div>

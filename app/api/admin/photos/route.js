@@ -9,7 +9,7 @@ export async function GET(req) {
         const user = await getUserFromCookie();
         if(!user && user.role !== "admin")return Response({error:  "User Not Found!"},{status: 404});
 
-        const photos = await Photo.find();
+        const photos = await Photo.find().sort({ createdAt: -1});
         if(!photos)return Response.json({error: "Photos not found"});
         return Response.json(photos, {status:201})
     } catch (error) {

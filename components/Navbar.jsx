@@ -28,10 +28,10 @@ export default function Navbar() {
       const res = await fetch("/api/featured/new");
       const data = await res.json();
       if(data.hasNew === false){
-        setHasNew(false);
+        setHasNew(data.hasNew);
         return;
       }
-      setHasNew(true);
+      setHasNew(data.hasNew);
     }
     fetchHasNew();
 
