@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function AdminPhoto() {
   const [photos, setPhotos] = useState([]);
@@ -19,9 +20,13 @@ export default function AdminPhoto() {
     );
     if (!confirmDelete) return;
 
-    await fetch(`/api/photos/${id}`, {
+    const res = await fetch(`/api/photos/${id}`, {
       method: "DELETE",
     });
+
+    if(res.ok){
+      toast.success("Photo deleted successfully.");
+    }
 
     fetchPhotos();
   };
@@ -64,13 +69,13 @@ export default function AdminPhoto() {
               <div className="flex gap-2 mt-3 ">
                 <button
                   onClick={() => router.push(`/admin/edit-photo/${photo._id}`)}
-                  className="text-xs bg-blue-500 px-2 py-2 rounded"
+                  className="text-xs bg-blue-500 px-2 py-2 rounded hover:bg-blue-600"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleDelete(photo._id)}
-                  className="text-xs bg-red-500 px-2 py-2 rounded"
+                  className="text-xs bg-red-500 px-2 py-2 rounded hover:bg-red-600"
                 >
                   Delete
                 </button>
@@ -80,7 +85,7 @@ export default function AdminPhoto() {
         ))}
         {photos?.length === 0 && (
           <div>
-            <h3>No messages to display!</h3>
+            <h3>No photos to display!</h3>
           </div>
         )}
       </div>

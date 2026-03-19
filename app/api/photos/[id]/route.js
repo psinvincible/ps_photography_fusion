@@ -1,4 +1,5 @@
 import { getUserFromCookie } from "@/lib/auth/getUserFromCookie";
+import cloudinary from "@/lib/cloudinary";
 import { connectDB } from "@/lib/connectDB";
 import Photo from "@/models/Photo";
 
@@ -39,6 +40,15 @@ export async function DELETE(req, { params }) {
 
   const { id } = await params;
 
+  const photo = await Photo.findById(id);
+  //deleting photo from cloudinary
+  if(photo.public_id){
+    await cloudinary.uploader.destroy(photo.public_id);
+    console.log("photo deleted from cloudinary...");
+  }else {
+    console.log("No public id for cloudindary found!");
+  }
+  
   const deletedPhoto = await Photo.findByIdAndDelete(id);
 
   return Response.json(deletedPhoto, { message: "Photo Deleted!" });        

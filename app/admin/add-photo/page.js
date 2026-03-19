@@ -1,52 +1,74 @@
 "use client"
 
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import toast from 'react-hot-toast';
 
 const page = () => {
   const router = useRouter();
+  const controllerRef = useRef(null);
 
   const [form, setForm] = useState({
     title: "",
     imageUrl: "",
     category: "",
     description: "",
+    public_id: ""
   });
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
   
   const handleImageUpload = async (e) => {
     e.preventDefault();
+
     if (!image) {
       toast.error("image not found!");
       return;
     }
+
     setUploading(true);
+
+    const controller = new AbortController();
+    controllerRef.current = controller;
+
     const formData = new FormData();
     formData.append("file", image);
+
     try {
       const res = await fetch("/api/admin/upload", {
         method: "POST",
         body: formData,
+        signal: controller.signal
       });
+
       const data = await res.json();
-      console.log("ImageUrl:", data.url);
+      console.log("Uploaded ImageUrl:", data.url);
+      console.log("Public id:", data.public_id);
+
       if (res.ok && data.url) {
         toast.success("image Upload success");
         setForm((prev) => ({
           ...prev,
           imageUrl: data.url,
+          public_id: data.public_id,
         }));
       } else {
         toast.error("Upload failed!");
       }
     } catch (err) {
-      toast.error("Upload error!");
+      if(err.name === "AbortError"){
+      toast.error("Upload Cancelled!");
+      }
+      setUploading(false);
     }
-    setUploading(false);
   };
 
+  const cancelUpload = () => {
+    if(controllerRef.current){
+      controllerRef.current.abort();
+      setUploading(false);
+    }
+  }
   const handleChange = (e) => {
     setForm({...form, [e.target.name] : e.target.value})
   }
@@ -63,11 +85,26 @@ const page = () => {
     const data = await res.json();
 
     if(res.ok){
+      toast.success("Photo Added")
       router.push('/admin/dashboard');
     }else {
-      alert("Error adding photo!");
+      toast.error("Error adding photo!");
     }
   }
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if(!file) return;
+
+    if(!file.type.startsWith("image/")){
+      alert("Only image files are allowed.");
+      return;
+    }
+
+    setImage(file);
+  }
+
+
 
 
   return (
@@ -106,16 +143,22 @@ const page = () => {
           <input 
           type="file"
           accept='image/*'
-          onChange={(e) => setImage(e.target.files[0])}
+          onChange={handleFileChange}
           className='w-full border rounded-lg px-3 py-2'
           />
 
           <button
             onClick={handleImageUpload}
             type="button"
-            className='px-4 py-2 bg-white text-black rounded'
+            className='px-4 py-2 bg-white text-black rounded mx-4 my-2'
             disabled={uploading}
           >{uploading ? "Uploading..." : "Upload Photo"}</button>
+
+          <button
+            onClick={cancelUpload}
+            type="button"
+            className='px-4 py-2 bg-red-500 mx-4 my-2 text-white rounded'
+          >Cancel</button>
 
           {form.imageUrl && (
             <div>

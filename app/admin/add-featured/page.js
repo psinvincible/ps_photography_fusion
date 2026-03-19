@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function AddFeatured() {
   const router = useRouter();
@@ -12,6 +13,7 @@ export default function AddFeatured() {
     link: "",
     animation: "glow",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -20,6 +22,7 @@ export default function AddFeatured() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setLoading(true);
     const res = await fetch(`/api/featured`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -27,7 +30,14 @@ export default function AddFeatured() {
     });
 
     if (res.ok) {
+      toast.success("New featured Added.")
+      setLoading(false);
       router.push("/admin/dashboard");
+      return;
+    }else {
+      toast.error("Something went wrong!");
+      setLoading(false);
+      return;
     }
   };
 
@@ -44,6 +54,7 @@ export default function AddFeatured() {
           <input
             name="title"
             type="text"
+            disabled={loading}
             placeholder="Title"
             className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-white/20"
             onChange={handleChange}
@@ -54,6 +65,7 @@ export default function AddFeatured() {
           <label className="block text-sm font-medium mb-1">Message</label>
           <textarea
             name="message"
+            disabled={loading}
             placeholder="Message"
             className="w-full border rounded-lg px-3 py-2"
             onChange={handleChange}
@@ -64,6 +76,7 @@ export default function AddFeatured() {
           <label className="block text-sm font-medium mb-1">Image URL</label>
           <input
             name="imageUrl"
+            disabled={loading}
             className="w-full border rounded-lg px-3 py-2"
             onChange={handleChange}
           />
@@ -75,6 +88,7 @@ export default function AddFeatured() {
           </label>
           <input
             name="link"
+            disabled={loading}
             className="w-full rounded-lg px-3 py-2 border"
             onChange={handleChange}
           />
@@ -84,6 +98,7 @@ export default function AddFeatured() {
           <label className="block text-sm font-medium mb-1">Animation</label>
           <select
             name="animation"
+            disabled={loading}
             placeholder="Animation"
             className="w-full border rounded-lg px-3 py-2 bg-black text-white"
             onChange={handleChange}
@@ -95,8 +110,10 @@ export default function AddFeatured() {
           </select>
         </div>
 
-        <button className="w-full bg-white text-black py-2 rounded">
-          Save Featured
+        <button className="w-full bg-white text-black py-2 rounded"
+        disabled={loading}
+        >
+          {loading ? "Saving..." : "Save Featured"}
         </button>
       </form>
     </div>

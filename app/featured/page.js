@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 
 export default function FeaturedSection() {
   const [active, setActive] = useState([]);
-  const [openModal, setOpenModal] = useState(false);
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
@@ -87,19 +86,19 @@ export default function FeaturedSection() {
 
             <button
             onClick={() => setSelected(null)}
-            className="absolute top-4 right-4 text-gray-400 hover:text-white"
+            className="absolute top-4 right-4 text-gray-400 hover:text-white border-black border-3   rounded-full bg-green-300"
             >✕</button>
 
             <img 
             src={selected.imageUrl}
-            className="w-full h-64 object-cover rounded-xl"
+            className="w-full h-64  object-cover rounded-xl"
             />
 
             <h2 className="text-2xl font-bold mt-4 ">{selected.title}</h2>
 
             <p className="text-gray-400 mt-2">{selected.message}</p>
 
-            <p className="text-sm text-gray-500 mt-2">Expires: {new Date(selected.expiresAt).toLocaleString()}</p>
+            <p className="text-sm text-gray-500 mt-2">Expires At: {new Date(selected.expiresAt).toLocaleString()}</p>
 
             {selected.link && (
                 <a

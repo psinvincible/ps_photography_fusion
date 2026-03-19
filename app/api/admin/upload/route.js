@@ -18,6 +18,7 @@ export async function POST(req){
     })
 
     return Response.json({
-        url: uploadResult.secure_url
+        url: uploadResult.secure_url,
+        public_id: uploadResult.public_id,
     })
 }

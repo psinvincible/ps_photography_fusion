@@ -16,6 +16,9 @@ const photoSchema = new mongoose.Schema(
         },
         description: {
             type: String,
+        },
+        public_id: {
+            type: String,
         }
     },{timestamps: true}
 );
