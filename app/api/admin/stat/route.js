@@ -15,12 +15,20 @@ export async function GET(){
         const featured = await Featured.countDocuments();
         const wishes = await Wish.countDocuments({approved: false});
         const stats = await Stat.findOne();
+        const result = await Photo.aggregate([
+                    {
+                        $group: {
+                            _id: null,
+                            totalViews: {$sum: "$views"}
+                        }
+                    }
+                ]);
+
         
-        // views and likes are pending for now to be updated
-        const views = 0;
+        //likes are pending for now to be updated
         const likes = 0;
 
-        return Response.json({photos, contacts, featured, visitors: stats?.visitors || 0, wishes, likes, views})
+        return Response.json({photos, contacts, featured, visitors: stats?.visitors || 0, wishes, likes, views: result[0]?.totalViews || 0})
 
     } catch (error) {
         return Response.json({error: "Internal Error"}, {status: 500});

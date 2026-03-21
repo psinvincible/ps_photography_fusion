@@ -5,6 +5,7 @@ import { FaInstagram } from "react-icons/fa";
 
 export default function Footer(){
     const [visitors, setVisitors] = useState(0);
+    const [views, setViews] = useState(0);
     const [ip, setIp] = useState("");
     
     
@@ -15,10 +16,17 @@ export default function Footer(){
             setVisitors(data.visitors);
             setIp(data.ip);
         }
+        const fetchViews = async() => {
+            const res = await fetch("/api/stat/views");
+            const data = await res.json();
+            setViews(data.totalViews);
+        }
         fetchVisitors();
-
+        fetchViews();
+        
         const interval = setInterval(() => {
             fetchVisitors();
+            fetchViews();
         }, 10000);
 
         return () => clearInterval(interval);
@@ -45,6 +53,7 @@ export default function Footer(){
                 <div className="">
                     <a href="https://www.instagram.com/ps_photography_fusion" className="flex items-center" target="_blank">Follow Us:&nbsp;&nbsp;&nbsp;<FaInstagram /></a>
                     <p>Visitors since launch: <span className="px-3 bg-gray-400 font-medium rounded-xl border">{visitors}</span></p>
+                    <p>Total Views so far: <span className="px-3 bg-gray-400 font-medium rounded-xl border">{views}</span></p>
                     <p className="text-xs mt-2">Your IP: <span className="px-2 bg-gray-700 rounded text-white">{ip}</span></p>
                 </div>                               
                     

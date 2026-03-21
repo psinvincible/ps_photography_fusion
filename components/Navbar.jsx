@@ -27,8 +27,9 @@ export default function Navbar() {
     const fetchHasNew = async() => {
       const res = await fetch("/api/featured/new");
       const data = await res.json();
+      console.log(data.hasNew)
       if(data.hasNew === false){
-        setHasNew(data.hasNew);
+        console.log(data.hasNew)
         return;
       }
       setHasNew(data.hasNew);

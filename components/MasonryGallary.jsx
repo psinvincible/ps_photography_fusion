@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import Masonry from "react-masonry-css"
 
 export default function MasonryGallary({photos}){
@@ -12,6 +13,25 @@ export default function MasonryGallary({photos}){
         800: 2,
         500: 1,
     }
+
+        const increaseView = async(id) => {
+            const viewed = localStorage.getItem(`viewed_${id}`);
+            if(viewed){
+                return;
+            };
+
+            const res = await fetch(`/api/photos/views/${id}`, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+            });
+
+            if(res.ok){
+                localStorage.setItem(`viewed_${id}`, "true");
+                toast.success("View updated!");
+            }else {
+                toast.error("Something went wrong!");
+            }
+        }
     
     return (
         <>
@@ -24,7 +44,11 @@ export default function MasonryGallary({photos}){
                 <div 
                 key={photo._id}
                 className="overflow-hidden rounded-xl"
-                onClick={() => setSelectedPhoto(photo)}
+                onClick={() => {
+                    setSelectedPhoto(photo);
+                    increaseView(photo._id);
+                    }
+                }
                 >
                     <img 
                     src={photo.imageUrl}
@@ -47,6 +71,7 @@ export default function MasonryGallary({photos}){
              />
              <h2 className="mt-4 text-4xl font-semibold">{selectedPhoto.title}</h2>
              <p className='text-gray-400'>{selectedPhoto.description}</p>
+
           </div>
         </div>
       )}

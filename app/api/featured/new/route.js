@@ -6,7 +6,8 @@ export async function GET(){
     try {
         await connectDB();
         
-        const newFeatured = await Featured.findOne({isActive: true});
+        const newFeatured = await Featured.findOne({expiresAt: {$gt: new Date()} ,isActive: true});
+        console.log(newFeatured);
 
         if(!newFeatured){
             return Response.json({hasNew: false});

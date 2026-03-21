@@ -30,12 +30,12 @@ export default function AdminDashboard() {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mx-7">
         
-        <StatCard title="Visitors" value={stats.visitors} />
+        <StatCard title="Total Visitors" value={stats.visitors} />
         <StatCard title="Photos" value={stats.photos} />
         <StatCard title="Feedbacks" value={stats.contacts} />
         <StatCard title="Featured" value={stats.featured} />
         <StatCard title="Public Wishes (approved)" value={stats.wishes} />
-        <StatCard title="Views" value={stats.views} />
+        <StatCard title="Total Views" value={stats.views} />
         <StatCard title="Likes" value={stats.likes} />
 
       </div>

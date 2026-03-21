@@ -19,8 +19,16 @@ const photoSchema = new mongoose.Schema(
         },
         public_id: {
             type: String,
-        }
-    },{timestamps: true}
+        },
+        views: {
+            type: Number,
+            default: 0,
+        },
+        likes: {
+            type: Number,
+            default: 0,
+        },
+    },{timestamps: true},
 );
 
 export default mongoose.models.Photo || mongoose.model("Photo", photoSchema);
