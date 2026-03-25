@@ -28,6 +28,13 @@ const photoSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
+        exif: {
+            camera: String,
+            iso: Number,
+            aperture: Number,
+            shutter: String,
+            focalLength: Number,
+        }
     },{timestamps: true},
 );
 
