@@ -21,7 +21,7 @@ const page = () => {
       aperture: "",
       shutter: "",
       focalLength: "",
-    }
+    },
   });
   const [image, setImage] = useState(null);
   const [exif, setExif] = useState(null);
@@ -62,6 +62,7 @@ const page = () => {
           imageUrl: data.url,
           public_id: data.public_id,
         }));
+        setUploading(false);
       } else {
         toast.error("Upload failed!");
       }
@@ -102,7 +103,7 @@ const page = () => {
     }
   };
 
-  const handleFileChange = async(e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
@@ -120,15 +121,17 @@ const page = () => {
 
       //setting exif data to form
       setForm((prev) => ({
-        ...prev, 
+        ...prev,
         exif: {
           camera: exifData?.Model || "",
           iso: exifData?.ISO || "",
           aperture: exifData?.FNumber || "",
-          shutter: exifData?.ExposureTime ? `1/${Math.round(1 / exifData.ExposureTime)}` : "",
+          shutter: exifData?.ExposureTime
+            ? `1/${Math.round(1 / exifData.ExposureTime)}`
+            : "",
           focalLength: exifData?.FocalLength || "",
-        }
-      }))
+        },
+      }));
     } catch (error) {
       console.error("Exif parse error:", error);
       setExif(null);
@@ -141,16 +144,16 @@ const page = () => {
     setExif(null);
 
     setForm((prev) => ({
-      ...prev, 
+      ...prev,
       exif: {
         camera: "",
         iso: "",
         aperture: "",
         shutter: "",
         focalLength: "",
-      }
-    }))
-  }
+      },
+    }));
+  };
 
   return (
     <div className="grid md:grid-cols-2 gap-8 p-6">
@@ -187,58 +190,62 @@ const page = () => {
           <div>
             {!preview && (
               <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-400 rounded-xl p-6 cursor-pointer hover:bg-white/5 transition">
-                <span className="text-sm text-gray-400 ">Click or drag image</span>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="hidden"
+                <span className="text-sm text-gray-400 ">
+                  Click or drag image
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
                 />
-                </label>
+              </label>
             )}
 
             {preview && (
               <div className="relative group rounded-2xl overflow-hidden shadow-lg">
-                <img src={preview} className="w-full h-87.5 object-cover transition-transform duration-300 group-hover:scale-105" />
+                <img
+                  src={preview}
+                  className="w-full h-87.5 object-cover transition-transform duration-300 group-hover:scale-105"
+                />
 
                 <button
                   type="button"
                   onClick={removeImage}
-                  className="absolute top-3  right-2 bg-black/70 hover:bg-red-500 text-white px-3 py-1 rounded-lg text-sm transition"
+                  className={`absolute top-3  right-2 bg-black/70 hover:bg-red-500 text-white px-3 py-1 rounded-lg text-sm transition ${form.imageUrl ? "hidden" : ""}`}
+                  disabled={form.imageUrl}
                 >
                   Remove Image
                 </button>
               </div>
             )}
 
-            {image && (
-              <div>
-                <button
-                  onClick={handleImageUpload}
-                  type="button"
-                  className="px-5 py-2 rounded-xl bg-linear-to-r from-white to-gray-300 text-black font-medium shadow hover:scale-105 transition"
-                  disabled={uploading}
-                >
-                  {uploading ? "Uploading..." : "Upload Photo"}
-                </button>
+            {image && !form.imageUrl && (
+              <div className="flex gap-4 mt-3">
+                {!uploading ? (
+                  <>
+                    <button
+                      onClick={handleImageUpload}
+                      type="button"
+                      className="px-5 py-2 rounded-xl bg-linear-to-r from-white to-gray-300 text-black font-medium shadow hover:scale-105 transition"
+                      disabled={uploading}
+                    >
+                      {uploading ? "Uploading..." : "Upload Photo"}
+                    </button>
 
-                <button
-                  onClick={cancelUpload}
-                  type="button"
-                  className="px-5 py-2 bg-red-500 text-white rounded-xl  shadow hover:bg-red-600 transition"
-                >
-                  Cancel
-                </button>
-              </div>
-            )}
-
-            {form.imageUrl && (
-              <div>
-                <img
-                  src={form.imageUrl}
-                  alt="preview"
-                  className="w-40 h-40 object-cover rounded-lg border"
-                />
+                    <button
+                      onClick={cancelUpload}
+                      type="button"
+                      className="px-5 py-2 bg-red-500 text-white rounded-xl  shadow hover:bg-red-600 transition"
+                    >
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <div className="px-5 py-2 rounded-xl bg-white/20 text-white animate-pulse">
+                    Uploading...
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -298,8 +305,27 @@ const page = () => {
 
             <div className="bg-white/10 p-3 rounded-lg">
               <p className="text-gray-400">Aperture</p>
-              <p>Shutter: {exif.ExposureTime ? `1/${Math.round(1 / exif.ExposureTime)}` : "N/A"}</p>
+              <p>
+                Shutter:{" "}
+                {exif.ExposureTime
+                  ? `1/${Math.round(1 / exif.ExposureTime)}`
+                  : "N/A"}
+              </p>
               <p>Focal Length: {exif.FocalLength || "N/A"}</p>
+            </div>
+          </div>
+        )}
+
+        {form.imageUrl && (
+          <div className="mt-6">
+            <h3 className="text-sm text-gray-400 mb-2 ">Uploaded Image</h3>
+
+            <div className="rounded-xl overflow-hidden shadow-lg ">
+              <img
+                src={form.imageUrl}
+                alt="uploaded"
+                className="w-full h-64 object-cover"
+              />
             </div>
           </div>
         )}
