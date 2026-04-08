@@ -3,6 +3,9 @@
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { categories } from '@/lib/assets';
+import Select from "react-select"
+
 
 const page = () => {
   const router = useRouter();
@@ -47,6 +50,11 @@ const page = () => {
       .then((res) => res.json())
       .then((data) => setForm(data));
   }, [id]);
+
+  const categoryOptions = categories.map((category) => ({
+      label: category,
+      value: category,
+    }))
 
   return (
     <div className="min-h-screen bg-black text-white p-4 md:p-8">
@@ -112,14 +120,16 @@ const page = () => {
 
           <div>
             <label className="text-sm text-gray-400 ">Category</label>
-            <input
-              value={form.category}
-              type="text"
-              name="category"
-              placeholder="Category"
-              className="w-full p-3 mt-1 bg-black border border-white/20 rounded-lg"
-              onChange={handleChange}
+            <Select 
+              options={categoryOptions}
+              
+              value={categoryOptions.find(option =>  option.value === form.category)}
+              onChange={(selected) => setForm({...form, category: selected.value})}
+              isSearchable 
+              placeholder="Select or Search category"
+              className="w-full border rounded-lg text-black"
             />
+            
           </div>
 
           <div>

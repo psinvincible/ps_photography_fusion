@@ -36,6 +36,9 @@ export default function MasonryGallary({ photos }) {
 
   return (
     <>
+      {photos.length === 0 && (
+        <p className="text-center text-gray-400 ">No photos found.</p>
+      )}
       <Masonry
         breakpointCols={breakpointsColumns}
         className="flex gap-4"

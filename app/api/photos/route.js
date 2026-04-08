@@ -4,6 +4,19 @@ import Photo from "@/models/Photo";
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
+  const search = searchParams.get("search");
+
+  let query = {};
+
+  if(search){
+    query = {
+      $or: [
+        {title: { $regex: search, $options: "i"}},
+        {description: { $regex: search, $options: "i"}},
+        {category: { $regex: search, $options: "i"}}
+      ]
+    }
+  }
 
   const limit = parseInt(searchParams.get("limit")) || 6;
   const skip = parseInt(searchParams.get("skip")) || 0;
@@ -11,7 +24,7 @@ export async function GET(req) {
   try {
     await connectDB();
 
-    const photos = await Photo.find()
+    const photos = await Photo.find(query)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);

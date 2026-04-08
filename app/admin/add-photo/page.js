@@ -4,6 +4,8 @@ import exifr from "exifr";
 import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { categories } from "@/lib/assets";
+import Select from "react-select";
 
 const page = () => {
   const router = useRouter();
@@ -155,6 +157,11 @@ const page = () => {
     }));
   };
 
+  const categoryOptions = categories.map((category) => ({
+    label: category,
+    value: category,
+  }))
+
   return (
     <div className="grid md:grid-cols-2 gap-8 p-6">
       <div className="p-6 max-w-3xl mx-auto">
@@ -252,13 +259,14 @@ const page = () => {
 
           <div>
             <label className="block text-sm font-medium mb-1">Category</label>
-            <input
-              type="text"
-              name="category"
-              placeholder="Category"
-              className="w-full border rounded-lg px-3 py-2"
-              onChange={handleChange}
-            />
+            <Select
+              options={categoryOptions}
+              value={categoryOptions.find(option =>  option.value === form.category)}
+              onChange={(selected) => setForm({...form, category: selected.value})}
+              isSearchable
+              placeholder="Select or Search category"
+              className="w-full border rounded-lg text-black"
+             />
           </div>
 
           <div>
